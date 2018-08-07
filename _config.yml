@@ -13,7 +13,8 @@ disqus_show_comment_count: false
 
 exclude: [vendor]
 
-gems: ['jekyll-lunr-js-search']
+plugins: ['jekyll-lunr-js-search', 'jekyll-paginate']
+
 lunr_search:
   js_dir: "javascripts"
 

@@ -1,6 +1,7 @@
 # Author: Brandon Mathis
 # Description: Provides plugins with a method for wrapping and unwrapping input to prevent Markdown and Textile from parsing it.
 # Purpose: This is useful for preventing Markdown and Textile from being too aggressive and incorrectly parsing in-line HTML.
+
 module TemplateWrapper
   # Wrap input with a <div>
   def self.safe_wrap(input)
@@ -19,21 +20,22 @@ end
 # Description: Raw tag for jekyll. Keeps liquid from parsing text betweeen {% raw %} and {% endraw %}
 
 module Jekyll
-  class RawTag < Liquid::Block
+  class RawTag < Liquid::Raw
     def parse(tokens)
       @nodelist ||= []
       @nodelist.clear
 
       while token = tokens.shift
-        if token =~ FullToken
+        if token =~ Liquid::BlockBody::FullToken
           if block_delimiter == $1
-            end_tag
+
             return
           end
         end
         @nodelist << token if not token.empty?
       end
     end
+   
   end
 end
 

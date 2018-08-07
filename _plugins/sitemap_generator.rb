@@ -62,7 +62,7 @@ module Jekyll
     attr_accessor :name
 
     def full_path_to_source
-      File.join(@base, @name)
+      File.join(site.config["url"], @name)
     end
 
     def location_on_server
@@ -74,7 +74,22 @@ module Jekyll
     attr_accessor :name
 
     def full_path_to_source
-      File.join(@base, @dir, @name)
+      File.join(site.config["url"], @dir, @name)
+    end
+
+    def location_on_server
+      location = "#{site.config['url']}#{@dir}#{url}"
+      location.gsub(/index.html$/, "")
+    end
+  end
+
+  class Document
+    attr_accessor :name
+
+    # Local!
+    def full_path_to_source
+      path
+      # File.join(site.config["url"], "blog", basename_without_ext)
     end
 
     def location_on_server
@@ -85,7 +100,8 @@ module Jekyll
 
   class Layout
     def full_path_to_source
-      File.join(@base, @name)
+    path
+      # File.join(@base, basename_without_ext)
     end
   end
 
@@ -141,7 +157,7 @@ module Jekyll
     # Returns last_modified_date of latest post
     def fill_posts(site, urlset)
       last_modified_date = nil
-      site.posts.each do |post|
+      site.posts.docs.each do |post|
         if !excluded?(post.name)
           url = fill_url(site, post)
           urlset.add_element(url)
